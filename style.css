@@ -1044,3 +1044,200 @@ ul { list-style: none; }
   .contact__form { padding: 24px; }
   .hero__stats { gap: 16px; }
 }
+
+/* ============================================================
+   SERVICES SECTION
+   Built on the existing design tokens above — no new colors.
+   Reuses .section / .section__eyebrow / .section__title / .btn /
+   .highlight / .form-group already defined elsewhere in this file.
+   ============================================================ */
+
+.services { background: var(--surface); }
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  position: relative;
+}
+
+.service-card--featured {
+  border-color: rgba(79,255,176,0.3);
+  background: linear-gradient(180deg, rgba(79,255,176,0.06), var(--surface-2) 45%);
+}
+
+.service-card--featured::before {
+  content: 'MOST REQUESTED';
+  position: absolute;
+  top: -1px; right: 24px;
+  transform: translateY(-50%);
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+.service-card__tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.service-card__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.service-card__desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.service-card__list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 28px;
+  flex-grow: 1;
+}
+
+.service-card__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.service-card__list li:first-child { border-top: none; }
+
+.service-card__list li i {
+  color: var(--accent);
+  font-size: 0.8rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.services__note {
+  text-align: center;
+  margin-top: 48px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.services__note a {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(79,255,176,0.4);
+  transition: var(--transition);
+}
+
+.services__note a:hover { border-color: var(--accent); }
+
+/* ============================================================
+   SERVICES MODAL — same surface/glow language as .contact__form
+   ============================================================ */
+
+.svc-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(11,14,20,0.75);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.svc-modal-overlay.svc-open { display: flex; }
+
+.svc-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 460px;
+  width: 100%;
+  padding: 40px 36px;
+  position: relative;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  animation: fadeUp 0.3s ease both;
+}
+
+.svc-modal-close {
+  position: absolute;
+  top: 18px; right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.svc-modal-close:hover { color: var(--text-primary); }
+
+.svc-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.svc-modal-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.svc-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.svc-modal-success {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.svc-modal-success.svc-show { display: flex; justify-content: center; }
+.svc-modal-form.svc-hide { display: none; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .services__grid { grid-template-columns: 1fr; }
+  .service-card--featured { order: -1; }
+}
+
+@media (max-width: 480px) {
+  .svc-modal { padding: 28px 24px; }
+}
