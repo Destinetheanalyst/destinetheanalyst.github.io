@@ -40,8 +40,10 @@ document.querySelectorAll('.mobile-link').forEach(link => {
 
 // ============================================================
 // SCROLL REVEAL — fade-up on enter
+// .service-card added here so the Services section animates
+// identically to existing project cards / skill categories.
 // ============================================================
-const revealEls = document.querySelectorAll('.project-card, .skill-category, .highlight, .social-link');
+const revealEls = document.querySelectorAll('.project-card, .skill-category, .highlight, .social-link, .service-card');
 
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
@@ -78,22 +80,45 @@ skillBars.forEach(bar => {
 
 // ============================================================
 // CONTACT FORM
+// FIXED: previously this only faked success via setTimeout and
+// never actually sent the message anywhere. Now opens a mailto:
+// draft pre-filled with the visitor's details, addressed to you.
+// Same UX as before (button text change, success message, auto-hide).
 // ============================================================
 document.getElementById('contactForm').addEventListener('submit', function (e) {
   e.preventDefault();
   const btn = this.querySelector('button[type="submit"]');
   const success = document.getElementById('formSuccess');
+  const form = this;
 
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
+  // Pull values defensively — adjust these field names if your
+  // contact form's inputs use different `name` attributes.
+  const getVal = (selector) => {
+    const el = form.querySelector(selector);
+    return el ? el.value : '';
+  };
+
+  const name = getVal('[name="name"]');
+  const email = getVal('[name="email"]');
+  const message = getVal('[name="message"]');
+
+  const subject = encodeURIComponent('New message from your portfolio site');
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+  );
+
   setTimeout(() => {
+    window.location.href = `mailto:destine.dike234@gmail.com?subject=${subject}&body=${body}`;
+
     btn.textContent = 'Send Message →';
     btn.disabled = false;
     success.classList.add('visible');
-    this.reset();
+    form.reset();
     setTimeout(() => success.classList.remove('visible'), 4000);
-  }, 1200);
+  }, 600);
 });
 
 // ============================================================
@@ -107,4 +132,68 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+});
+
+// ============================================================
+// SERVICES SECTION — modal open/close + form submission
+// Same mailto pattern as the contact form above, for consistency.
+// ============================================================
+const svcServiceLabels = {
+  audit: "Data Audit & Roadmap",
+  dashboard: "Custom Dashboard Build",
+  retainer: "Monthly Analytics Retainer",
+  general: "General Inquiry"
+};
+
+function openServiceModal(serviceKey) {
+  const overlay = document.getElementById('svcModalOverlay');
+  const title = document.getElementById('svcModalTitle');
+  const serviceInput = document.getElementById('svcServiceType');
+  const form = document.getElementById('svcModalForm');
+  const success = document.getElementById('svcModalSuccess');
+
+  title.textContent = svcServiceLabels[serviceKey]
+    ? `Get a quote: ${svcServiceLabels[serviceKey]}`
+    : "Tell me about your project";
+
+  form.classList.remove('svc-hide');
+  success.classList.remove('svc-show');
+  form.reset();
+  serviceInput.value = svcServiceLabels[serviceKey] || "General Inquiry";
+
+  overlay.classList.add('svc-open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeServiceModal(event) {
+  if (event && event.target !== document.getElementById('svcModalOverlay')) return;
+  document.getElementById('svcModalOverlay').classList.remove('svc-open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('svcModalForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const success = document.getElementById('svcModalSuccess');
+
+  const name = form.name.value;
+  const email = form.email.value;
+  const service = form.service.value;
+  const message = form.message.value;
+
+  const subject = encodeURIComponent(`New inquiry: ${service}`);
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`
+  );
+
+  window.location.href = `mailto:destine.dike234@gmail.com?subject=${subject}&body=${body}`;
+
+  form.classList.add('svc-hide');
+  success.classList.add('svc-show');
+});
+
+// Close services modal on Escape key
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeServiceModal({ target: document.getElementById('svcModalOverlay') });
 });
